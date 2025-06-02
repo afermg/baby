@@ -16,7 +16,8 @@ requires-python = ">=3.6"
 dependencies = [
     "aiohttp",
     "matplotlib",
-    "numpy<2",
+    # "numpy<2",
+    "numpy",
     "pandas",
     "imageio",
     "pillow",
@@ -24,7 +25,8 @@ dependencies = [
     "scikit-image",
     "scikit-learn",
     "scipy",
-    "tensorflow>=1.14,<=2.14",
+    # "tensorflow>=1.14,<=2.14",
+    "tensorflow>=1.14",
     "tensorflow-metal; platform_system == 'Darwin' and platform_machine == 'arm64'",
     "tqdm",
 ]
