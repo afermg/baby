@@ -49,8 +49,8 @@ buildPythonPackage {
   src = fetchFromGitHub {
     owner = "afermg";
     repo = "baby";
-    rev = "ddb2cb1d040bf88cf0b57816200806c0f7112ffa";
-    sha256 = "sha256-nOSQhXxBd05CKED3stQZo9T8ijgE2Byck3kUKD7YdYg=";
+    rev = "9f52fb019f9570fae1f4bf39b5151e53df94dbd9";
+    sha256 = "sha256-kWFSNPeaAFG3NZW64nu9P5farTlFiZGRF06txEkTj6E=" ;
   };
   pyproject = true;
   buildInputs = [
