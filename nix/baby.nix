@@ -29,19 +29,6 @@
   # scipy,
   # scikit-image,
 }:
-let
-  packageOverrides = self: super: {
-    numpy = super.numpy.overridePythonAttrs(old: rec {
-      version = "1.26.4";
-      src = super.fetchPypi {
-        pname = "numpy";
-        inherit version;
-        extension = "tar.gz";
-        sha256 = "";
-      };
-    });
-  };
-in
 buildPythonPackage {
   pname = "baby-seg";
   version = "0.30.7";
@@ -54,21 +41,16 @@ buildPythonPackage {
   };
   pyproject = true;
   buildInputs = [
-    # cython
     pip
     setuptools
   ];
   propagatedBuildInputs = [
-    # deprecation
-    # numpy
-    # scipy
-    # scikit-image
-    # pytest
     aiohttp
     matplotlib
     pandas
     imageio
     pillow
+    numpy
     requests
     scikit-image
     scikit-learn
