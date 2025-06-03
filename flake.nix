@@ -7,53 +7,58 @@
     flake-utils.inputs.systems.follows = "systems";
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    flake-utils,
-    systems,
-    ...
-  } @ inputs:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      flake-utils,
+      systems,
+      ...
+    }@inputs:
     flake-utils.lib.eachDefaultSystem (
-      system: let
+      system:
+      let
         pkgs = import nixpkgs {
           system = system;
           config.allowUnfree = true;
           config.cudaSupport = true;
         };
-        
-      in
-        with pkgs; rec {
-          callPackage = lib.callPackageWith (pkgs // packages // python3Packages);
-          
-          packages = {
-              baby = callPackage ./nix/baby.nix {};
-            };
 
-          devShells = {
-            default = let
-              python_with_pkgs = (pkgs.python3.withPackages(pp: [
-                packages.baby
-                ]));
-              in
-              mkShell {
-                packages = [
-                  python_with_pkgs
-                  hatch
-                ];
-                venvDir = "./.venv";
-                postVenvCreation = ''
-                  unset SOURCE_DATE_EPOCH
-                '';
-                postShellHook = ''
-                  unset SOURCE_DATE_EPOCH
-                '';
-                shellHook = ''
-                  runHook venvShellHook
-                  export PYTHONPATH=${python_with_pkgs}/${python_with_pkgs.sitePackages}:$PYTHONPATH
-                '';
-              };
-          };
-        }
+      in
+      with pkgs;
+      rec {
+        callPackage = lib.callPackageWith (pkgs // packages // python311Packages);
+
+        packages = {
+          baby = callPackage ./nix/baby.nix { };
+        };
+        devShells = {
+          default =
+            let
+              python_with_pkgs = (
+                pkgs.python311.withPackages (pp: [
+                  packages.baby
+                ])
+              );
+            in
+            mkShell {
+              packages = [
+                python_with_pkgs
+              ];
+              currentSystem = system;
+              venvDir = "./.venv";
+              postVenvCreation = ''
+                unset SOURCE_DATE_EPOCH
+              '';
+              postShellHook = ''
+                unset SOURCE_DATE_EPOCH
+              '';
+              shellHook = ''
+                runHook venvShellHook
+                export PYTHONPATH=${python_with_pkgs}/${python_with_pkgs.sitePackages}:$PYTHONPATH
+              '';
+            };
+        };
+      }
     );
 }
