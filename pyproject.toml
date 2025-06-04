@@ -19,13 +19,13 @@ dependencies = [
     "numpy<2",
     "pandas",
     "imageio",
-    "pillow",
+    # "pillow",
     "requests",
     "scikit-image",
     "scikit-learn",
     "scipy",
     "tensorflow>=1.14,<=2.14",
-    "tensorflow-metal; platform_system == 'Darwin' and platform_machine == 'arm64'",
+    # "tensorflow-metal; platform_system == 'Darwin' and platform_machine == 'arm64'",
     "tqdm",
 ]
 classifiers = [
