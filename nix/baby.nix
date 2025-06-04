@@ -3,8 +3,6 @@
   # build deps
   buildPythonPackage,
   fetchFromGitHub,
-  pip,
-  setuptools,
   aiohttp,
   matplotlib,
   pandas,
@@ -24,13 +22,13 @@ buildPythonPackage {
   pname = "baby-seg";
   version = "0.30.7";
 
-  src = /home/amunoz/projects/baby;
-  #   fetchFromGitHub {
-  #   owner = "afermg";
-  #   repo = "baby";
-  #   rev = "fdd0a0c04f1568d7b2bc07cf6365ae779e2dceb5";
-  #   sha256 = "sha256-POGN7xV7VOZ4ruBqrRub8+9Rer9/46yLgSLp6Ab8AFw=";
-  # };
+  # src = ./..; # For local testing, add flag --impure when running
+  src = fetchFromGitHub {
+    owner = "afermg";
+    repo = "baby";
+    rev = "c2f6d6bb76c1b7b83adae95132bb70c9a894367f";
+    sha256 = "sha256-q4NvE3OhIgwMnORHE3Ab1bdZt3mHf3MZ6WWE2xquBR0=";
+  };
 
   pyproject = true;
   buildInputs = [

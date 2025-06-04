@@ -23,38 +23,10 @@
           config.allowUnfree = true;
           config.cudaSupport = true;
         };
-        # tpkgs = import (builtins.fetchGit {
-        # # Descriptive name to make the store path easier to identify
-        # name = "tensorflow_packages" ;
-        # url = "https://github.com/NixOS/nixpkgs/";
-        # ref = "refs/heads/nixpkgs-unstable";
-        # rev = "";
-        # }) { };
 
       in
       with pkgs;
       rec {
-        # py311 = (
-        #   pkgs.python311.override {
-        #     packageOverrides = pyself: pysuper: {
-        #       pytest-doctestplus = pysuper.pytest-doctestplus.overridePythonAttrs {
-        #         nativeCheckInputs = [ pysuper.numpy ];
-        #       };
-        #     };
-        #   }
-        # );
-        # tpkgsp = tpkgs.python311.override {
-        #   self = pkgs.python311;
-        #   packageOverrides = pyself: pysuper: {
-        #     fs = py311.pkgs.fs;
-        #     pynacl = py311.pkgs.pynacl;
-        #     deprecated = py311.pkgs.deprecated;
-        #     eventlet = py311.pkgs.eventlet;
-        #     paramiko = py311.pkgs.paramiko;
-        #   };
- 
-        # };
-        
         packages = {
           baby = pkgs.python311.pkgs.callPackage ./nix/baby.nix { };
         };
