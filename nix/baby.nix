@@ -9,7 +9,7 @@
   imageio,
   keras,
   requests,
-  scikit-image,
+  scikitimage,
   scikit-learn,
   scipy,
   hatchling,
@@ -26,8 +26,8 @@ buildPythonPackage {
   src = fetchFromGitHub {
     owner = "afermg";
     repo = "baby";
-    rev = "c2f6d6bb76c1b7b83adae95132bb70c9a894367f";
-    sha256 = "sha256-q4NvE3OhIgwMnORHE3Ab1bdZt3mHf3MZ6WWE2xquBR0=";
+    rev = "39eec0d4c3b8fad9b0a8683cbedf9b4558e07222";
+    sha256 = "sha256-ptLXindgixDa4AV3x+sQ9I4W0PScIQMkyMNMo0WFa0M=";
   };
 
   pyproject = true;
@@ -42,8 +42,7 @@ buildPythonPackage {
     pandas
     pytest
     requests
-    scikit-image
-    scikit-image
+    scikitimage
     scikit-learn
     scipy
     tensorflow 

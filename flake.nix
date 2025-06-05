@@ -20,21 +20,38 @@
       let
         pkgs = import nixpkgs {
           system = system;
-          config.allowUnfree = true;
-          config.cudaSupport = true;
+          config = {
+            allowUnfree = true;
+            cudaSupport = true;
+          };
         };
 
       in
       with pkgs;
       rec {
+        py311 = (
+          pkgs.python311.override {
+            packageOverrides = _: super: {
+              scikit-learn = super.scikit-learn.overridePythonAttrs(old: rec {
+                version = "1.2.2";
+                # skip checks, as a few fail but they are irrelevant
+                doCheck=false; 
+                src =  super.fetchPypi {
+                  pname = "scikit-learn";
+                  inherit version;
+                  hash = "sha256-hCmuow7CTnqMftij+mITrfOBSm776gnhbgoMceGho9c=";
+                };
+              });
+                                                                      };
+          });
         packages = {
-          baby = pkgs.python311.pkgs.callPackage ./nix/baby.nix { };
+          baby = py311.pkgs.callPackage ./nix/baby.nix { };
         };
         devShells = {
           default =
             let
               python_with_pkgs = (
-                pkgs.python311.withPackages (pp: [
+                py311.withPackages (pp: [
                   packages.baby
                 ])
               );
