@@ -37,27 +37,30 @@ class BatchSizeChangedError(Exception):
 
 
 class BabyCrawler(object):
-    '''Coordinates incremental segmentation and tracking over a timelapse
+    """Coordinates incremental segmentation and tracking over a timelapse
 
     :param baby_brain: an instantiated BabyBrain defining the models
-    '''
+    """
 
     def __init__(self, baby_brain):
         self.baby_brain = baby_brain
         self.N_batch = None
         self.tracker_states = None
 
-    def step(self,
-             bf_img_batch,
-             pixel_size=None,
-             with_edgemasks=False,
-             assign_mothers=False,
-             return_baprobs=False,
-             refine_outlines=False,
-             with_volumes=False,
-             parallel=False,
-             **kwargs):
-        '''Process the next batch of input images
+    def step(
+        self,
+        bf_img_batch,
+        pixel_size=None,
+        with_edgemasks=False,
+        with_masks=False,
+        assign_mothers=False,
+        return_baprobs=False,
+        refine_outlines=False,
+        with_volumes=False,
+        parallel=False,
+        **kwargs,
+    ):
+        """Process the next batch of input images
 
         :param bf_img_batch: a list of ndarray with shape (X, Y, Z), or
             equivalently an ndarray with shape (N_images, X, Y, Z)
@@ -81,13 +84,12 @@ class BabyCrawler(object):
             - edgemasks: (optional) an ndarray of dtype "bool" with shape
               (N_cells, X, Y) specifying the rasterised edge for each
               segmented cell
-        '''
+        """
         if self.N_batch is None:
             self.N_batch = len(bf_img_batch)
 
         if len(bf_img_batch) != self.N_batch:
-            raise BatchSizeChangedError(
-                'cannot change batch size mid-session')
+            raise BatchSizeChangedError("cannot change batch size mid-session")
 
         if self.tracker_states is None:
             self.tracker_states = list(repeat(None, self.N_batch))
@@ -95,18 +97,20 @@ class BabyCrawler(object):
         output = []
 
         if parallel:
-            kwargs = {k: v for k, v in kwargs.items() if k in {'njobs'}}
+            kwargs = {k: v for k, v in kwargs.items() if k in {"njobs"}}
             seg_trk_gen = self.baby_brain.segment_and_track_parallel(
                 bf_img_batch,
                 tracker_states=self.tracker_states,
                 yield_next=True,
                 pixel_size=pixel_size,
                 yield_edgemasks=with_edgemasks,
+                yield_masks=with_masks,
                 yield_volumes=with_volumes,
                 assign_mothers=assign_mothers,
                 return_baprobs=return_baprobs,
                 refine_outlines=refine_outlines,
-                **kwargs)
+                **kwargs,
+            )
         else:
             seg_trk_gen = self.baby_brain.segment_and_track(
                 bf_img_batch,
@@ -114,10 +118,12 @@ class BabyCrawler(object):
                 yield_next=True,
                 pixel_size=pixel_size,
                 yield_edgemasks=with_edgemasks,
+                yield_masks=with_masks,
                 yield_volumes=with_volumes,
                 assign_mothers=assign_mothers,
                 return_baprobs=return_baprobs,
-                refine_outlines=refine_outlines)
+                refine_outlines=refine_outlines,
+            )
 
         for i, (seg, state) in enumerate(seg_trk_gen):
             # Update cumulative state
