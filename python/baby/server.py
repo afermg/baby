@@ -435,15 +435,19 @@ async def get_segmentation(request):
     # taskmaster, so in-place editing of dicts is ok):
     for p in pred:
         # - Custom data transformations -
-        if 'edgemasks' in p:
+        if "edgemasks" in p:
             # Convert edge masks to lists of x and y coords
-            p["edgemasks"] = [[(x + 1).tolist() for x in np.where(m)]
-                                  for m in p["edgemasks"]]
+            p["edgemasks"] = [
+                [(x + 1).tolist() for x in np.where(m)] for m in p["edgemasks"]
+            ]
+        if "masks" in p:
+            # Convert edge masks to lists of x and y coords
+            p["masks"] = [[(x + 1).tolist() for x in np.where(m)] for m in p["masks"]]
 
         # - Generic data transformations -
         for k, v in p.items():
             if isinstance(v, np.ndarray):
-                p[k] = None # heavy ndarrays must be obtained via other routes
+                p[k] = None  # heavy ndarrays must be obtained via other routes
 
     resp = jsonify(pred)
 
