@@ -1,4 +1,4 @@
-             {
+{
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/d97b37430f8f0262f97f674eb357551b399c2003";
     nixpkgs_master.url = "github:NixOS/nixpkgs/master";
@@ -25,25 +25,34 @@
             cudaSupport = true;
           };
         };
+        runServer = pkgs.writeScriptBin "runserver.sh" ''
+          #!${pkgs.bash}/bin/bash
+          baby-phone "$@"
+        '';
 
       in
       with pkgs;
       rec {
+        apps.default = {
+          type = "app";
+          program = "${runServer}/bin/runserver.sh";
+        };
         py311 = (
           pkgs.python311.override {
             packageOverrides = _: super: {
-              scikit-learn = super.scikit-learn.overridePythonAttrs(old: rec {
+              scikit-learn = super.scikit-learn.overridePythonAttrs (old: rec {
                 version = "1.2.2";
                 # skip checks, as a few fail but they are irrelevant
-                doCheck=false; 
-                src =  super.fetchPypi {
+                doCheck = false;
+                src = super.fetchPypi {
                   pname = "scikit-learn";
                   inherit version;
                   hash = "sha256-hCmuow7CTnqMftij+mITrfOBSm776gnhbgoMceGho9c=";
                 };
               });
-                                                                      };
-          });
+            };
+          }
+        );
         packages = {
           baby = py311.pkgs.callPackage ./nix/baby.nix { };
         };

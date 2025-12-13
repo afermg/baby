@@ -45,11 +45,12 @@ buildPythonPackage {
     scikitimage
     scikit-learn
     scipy
-    tensorflow 
+    tensorflow
     tqdm
   ];
-  
+
   pythonImportsCheck = [
+    "baby"
   ];
 
   meta = {
