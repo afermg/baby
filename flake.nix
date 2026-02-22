@@ -51,7 +51,8 @@
             };
             runServer = pkgs.writeScriptBin "runserver.sh" ''
               #!${pkgs.bash}/bin/bash
-              baby-phone --debug
+              echo Running baby-phone from ${packages.baby}
+              ${packages.baby}/bin/baby-phone 
             '';
           in
           {
