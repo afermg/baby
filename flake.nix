@@ -25,18 +25,24 @@
             cudaSupport = true;
           };
         };
-        runServer = pkgs.writeScriptBin "runserver.sh" ''
-          #!${pkgs.bash}/bin/bash
-          baby-phone "$@"
-        '';
-
       in
       with pkgs;
       rec {
-        apps.default = {
-          type = "app";
-          program = "${runServer}/bin/runserver.sh";
-        };
+        apps.default =
+          let
+            python_with_pkgs = python3.withPackages (pp: [
+              (inputs.nahual-flake.packages.${system}.nahual)
+              packages.baby
+            ]);
+            runServer = pkgs.writeScriptBin "runserver.sh" ''
+              #!${pkgs.bash}/bin/bash
+              baby-phone --debug
+            '';
+          in
+          {
+            type = "app";
+            program = "${runServer}/bin/runserver.sh";
+          };
         py311 = (
           pkgs.python311.override {
             packageOverrides = _: super: {
